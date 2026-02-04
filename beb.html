@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Favorite Person</title>
+    <style>
+        :root {
+            --space-bg: #0b0d17;
+            --nebula: rgba(108, 92, 231, 0.35);
+            --light-purple: #dcd0ff;
+            --deep-purple: #9b6dff;
+            --env-base: #cbb9ff;
+            --env-flap: #b39dfa;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--space-bg);
+            color: white; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .universe {
+            position: fixed; inset: 0;
+            background: radial-gradient(circle at center, var(--nebula) 0%, var(--space-bg) 85%);
+            z-index: 0;
+        }
+        .star {
+            position: absolute; background: white; border-radius: 50%;
+            opacity: 0.5; animation: twinkle 3s infinite ease-in-out;
+        }
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        .page { display: none; text-align: center; width: 95%; z-index: 10; animation: fadeIn 0.8s ease; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .glass-box {
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px);
+            padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        input { padding: 12px; border-radius: 8px; border: none; text-align: center; font-size: 1.2rem; width: 180px; margin: 20px 0; outline: none; background: white; color: black; }
+
+        .card-container {
+            background: white; color: #2d3436; padding: 40px; border-radius: 30px;
+            max-width: 600px; margin: 0 auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: left; 
+            max-height: 75vh; 
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .envelope-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr); gap: 75px 20px;
+            max-width: 420px; margin: 60px auto;
+        }
+
+        .env-wrapper {
+            position: relative; width: 150px; height: 100px;
+            background: var(--env-base); border-radius: 0 0 10px 10px;
+            cursor: pointer; transition: 0.4s; margin: 0 auto;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.4); perspective: 600px;
+        }
+
+        .flap {
+            position: absolute; top: 0; left: 0; width: 0; height: 0;
+            border-left: 75px solid transparent; border-right: 75px solid transparent;
+            border-top: 55px solid var(--env-flap); 
+            transform-origin: top; transition: transform 0.5s ease-in-out; z-index: 5;
+        }
+
+        .env-wrapper.open .flap { transform: rotateX(180deg); z-index: 1; }
+
+        .env-label {
+            position: absolute; bottom: 12px; width: 100%;
+            text-align: center; color: #4a3b7d; font-size: 0.7rem;
+            font-weight: bold; text-transform: uppercase; padding: 0 5px; box-sizing: border-box;
+        }
+
+        .heart {
+            position: absolute; top: -10px; left: 50%;
+            transform: translateX(-50%); color: #ff4757; font-size: 1.3rem; z-index: 10;
+        }
+
+        .read-counter {
+            position: absolute; bottom: 4px; right: 8px;
+            font-size: 0.6rem; color: #6c5ce7; font-weight: bold; opacity: 0.9;
+        }
+
+        .overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.9); z-index: 2000;
+            justify-content: center; align-items: center; padding: 20px;
+        }
+
+        .msg-box {
+            background: var(--light-purple); color: #1a1a2e;
+            padding: 30px; border-radius: 20px; width: 90%; max-width: 450px;
+            max-height: 80vh; 
+            display: flex; flex-direction: column;
+            text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .scroll-area {
+            overflow-y: auto;
+            padding-right: 10px;
+            margin-bottom: 15px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .scroll-area::-webkit-scrollbar { width: 4px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: var(--deep-purple); border-radius: 10px; }
+
+        .btn {
+            background: var(--deep-purple); color: white;
+            padding: 15px 35px; border: none; border-radius: 50px;
+            font-weight: bold; cursor: pointer; margin-top: 20px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="universe" id="universe"></div>
+
+    <div id="page1" class="page active">
+        <div class="glass-box">
+            <h2 style="color: var(--light-purple);">Hi Bebii</h2>
+            <p>Hint: our birthdates combined</p>
+            <input type="password" id="pw" maxlength="4" placeholder="••••">
+            <br>
+            <button class="btn" onclick="checkPW()">Access My Heart</button>
+        </div>
+    </div>
+
+    <div id="page2" class="page">
+        <div class="card-container">
+            <h1 style="text-align: center; color: var(--deep-purple);">Happy 8th Monthsary!</h1>
+            <p style="line-height: 1.8;">
+                Happy 8th monthsary, bebii! It’s our first monthsary not together, but that doesn't mean it has to suck. I mean, it does for you since you have class, but I wanted you to know even if we're far doesn't mean I can't do something for our monthsary.
+                <br><br>
+                I gotta beat this next month... ugh I hope I got something good! I hope you do know even though I'm not the best at coding but i would re-learn everything for you.
+                <br><br>
+                I’m sure for our future monthsaries and anniversaries we'll be together and travelling together. I miss you every day I hope you know that, and I'll never not miss you my love. I hate being far from you but it's good for us cause this is the only time we (I mean me) get to be productive, but I wish I was with you even for just an hour a week. I almost forgot i have another thing for you, press below me
+            </p>
+            <div style="text-align: center;"><button class="btn" onclick="showPage(3)">Open My Secret Envelopes</button></div>
+        </div>
+    </div>
+
+    <div id="page3" class="page">
+        <h2 style="color: var(--light-purple);">Open whenever you need me...</h2>
+        <div class="envelope-grid">
+            <div class="env-wrapper" onclick="handleOpen(this, 'first')"><div class="flap"></div><div class="heart">❤</div><div class="env-label">When u get this</div><div class="read-counter">Seen: <span id="count-first">0</span></div></div>
+            <div class="env-wrapper" onclick="handleOpen(this, 'miss')"><div class="flap"></div><div class="heart">❤</div><div class="env-label">Missing me</div><div class="read-counter">Seen: <span id="count-miss">0</span></div></div>
+            <div class="env-wrapper" onclick="handleOpen(this, 'over')"><div class="flap"></div><div class="heart">❤</div><div class="env-label">Overthinking</div><div class="read-counter">Seen: <span id="count-over">0</span></div></div>
+            <div class="env-wrapper" onclick="handleOpen(this, 'sad')"><div class="flap"></div><div class="heart">❤</div><div class="env-label">Feeling sad</div><div class="read-counter">Seen: <span id="count-sad">0</span></div></div>
+            <div class="env-wrapper" onclick="handleOpen(this, 'mad')"><div class="flap"></div><div class="heart">❤</div><div class="env-label">Mad at me</div><div class="read-counter">Seen: <span id="count-mad">0</span></div></div>
+            <div class="env-wrapper" onclick="handleOpen(this, 'happy')"><div class="flap"></div><div class="heart">❤</div><div class="env-label">Happy</div><div class="read-counter">Seen: <span id="count-happy">0</span></div></div>
+        </div>
+    </div>
+
+    <div id="overlay" class="overlay" onclick="closeMsg()">
+        <div class="msg-box" id="msg-content" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <script>
+        const universe = document.getElementById('universe');
+        for (let i = 0; i < 120; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = Math.random() * 3 + 'px'; star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + 'vw'; star.style.top = Math.random() * 100 + 'vh';
+            star.style.animationDelay = Math.random() * 5 + 's';
+            universe.appendChild(star);
+        }
+
+        const storageKey = 'bebii_letter_counts';
+        let counts = JSON.parse(localStorage.getItem(storageKey)) || { first: 0, miss: 0, over: 0, sad: 0, mad: 0, happy: 0 };
+
+        function updateDisplay() {
+            for (let key in counts) {
+                const el = document.getElementById('count-' + key);
+                if (el) el.innerText = counts[key];
+            }
+        }
+        updateDisplay();
+
+        function checkPW() {
+            if(document.getElementById('pw').value === "2131") showPage(2);
+            else alert("Think of our birthdays, bebii!");
+        }
+
+        function showPage(n) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page' + n).classList.add('active');
+        }
+
+        function handleOpen(el, type) {
+            el.classList.add('open');
+            counts[type]++;
+            localStorage.setItem(storageKey, JSON.stringify(counts));
+            updateDisplay();
+            setTimeout(() => { openMsg(type); }, 550);
+        }
+
+        function openMsg(type) {
+            let t = "";
+            let title = "";
+            if(type === 'first') {
+                title = "When u get this";
+                t = "SURPRISE, i made you a few 'when you're feeling' thingy, this was honestly easier than the valentines one because that had music and pictures but i'd do it again, i love you bebii ;P";
+            }
+            if(type === 'miss') {
+                title = "Missing me";
+                t = "Hii bebii, im not sure if you opened this because im distant again or just missing me, but i miss you alot aswell, and i might be an asshole sometimes to you but im glad you're willing to stay and missing me right now, im greatful for this life you shaped, with or without you knowing you did, and i love you everyday for it. i miss you're smell, your touch, your lips, your hugs, and everything about you i miss";
+            }
+            if(type === 'over') {
+                title = "Overthinking";
+                t = "I'm sorry bebii, if you had to open me, but you know me, i probably didnt mean to make you overthink, if its really bothering you, tell me so i can talk about it to you, i promise i won't push you away, even if it makes me uncomfy because i know you'd do the same, actually you have done it, and we're a team, we'd eventually hit this rock knowing we're ldr but just know, ill wait til you're ready to talk, just know future me is sorry and loves you very much :D";
+            }
+            if(type === 'sad') {
+                title = "Feeling sad";
+                t = "I wish I could hold you right now. Since I can't, please wrap yourself in a blanket and imagine it's me. I love you, even in your saddest moments.";
+            }
+            if(type === 'mad') {
+                title = "Mad at me";
+                t = "omfg what did i do sister, im such a bitch for making you mad at me, i apologize for future me, well present me for making you angry w me bebii, i love you and i hope you know im sorry, ill probably apologize to you later on after u read this";
+            }
+            if(type === 'happy') {
+                title = "Happy";
+                t = "hehe, this is the only envelop that i actually want you to open, im glad you're happy right now my love, the only time ill trully be happy is when im with you and i hope you feel the same, i love you with my full heart and soul, ill always be proud of everything you achieve, and more.";
+            }
+
+            document.getElementById('msg-content').innerHTML = `
+                <h3 style="margin-top:0; color:var(--deep-purple);">${title}</h3>
+                <div class="scroll-area">
+                    <p style="line-height:1.6; margin:0;">${t}</p>
+                </div>
+                <button class="btn" style="width:100%; margin-top:0;" onclick="closeMsg()">Close Letter</button>
+            `;
+            document.getElementById('overlay').style.display = 'flex';
+        }
+
+        function closeMsg() {
+            document.getElementById('overlay').style.display = 'none';
+            document.querySelectorAll('.env-wrapper').forEach(e => e.classList.remove('open'));
+        }
+    </script>
+</body>
+</html>
